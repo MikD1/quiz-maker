@@ -118,7 +118,7 @@ public class TelegramBotService : IHostedService
             return;
         }
 
-        workflowHost.PublishEvent($"{userData.UserId}:UserMessage", userText);
+        workflowHost.PublishEvent("UserMessage", userData.UserId, userText);
     }
 
     private readonly ILogger<TelegramBotService> _logger;

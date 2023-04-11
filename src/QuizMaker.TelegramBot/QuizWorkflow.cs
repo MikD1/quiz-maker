@@ -14,8 +14,10 @@ public class QuizWorkflow : IWorkflow<UserQuizData>
                 .Input(step => step.UserId, data => data.UserId))
             .Step<TextQuestion>(x => x
                 .Input(step => step.UserId, data => data.UserId))
+            .WaitForEvent("UserMessage", data => data.UserId)
             .Step<TextQuestion>(x => x
                 .Input(step => step.UserId, data => data.UserId))
+            .WaitForEvent("UserMessage", data => data.UserId)
             .Step<TextQuestion>(x => x
                 .Input(step => step.UserId, data => data.UserId));
     }
