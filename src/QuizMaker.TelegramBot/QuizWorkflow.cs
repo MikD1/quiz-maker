@@ -13,12 +13,16 @@ public class QuizWorkflow : IWorkflow<UserQuizData>
             .Step<Welcome>(x => x
                 .Input(step => step.UserId, data => data.UserId))
             .Step<TextQuestion>(x => x
-                .Input(step => step.UserId, data => data.UserId))
-            .WaitForEvent("UserMessage", data => data.UserId)
+                .Input(step => step.UserId, data => data.UserId)
+                .Input(step => step.Question, _ => "Вопрос 1")
+                .Input(step => step.CorrectAnswer, _ => "123"))
             .Step<TextQuestion>(x => x
-                .Input(step => step.UserId, data => data.UserId))
-            .WaitForEvent("UserMessage", data => data.UserId)
+                .Input(step => step.UserId, data => data.UserId)
+                .Input(step => step.Question, _ => "Вопрос 2")
+                .Input(step => step.CorrectAnswer, _ => "abc"))
             .Step<TextQuestion>(x => x
-                .Input(step => step.UserId, data => data.UserId));
+                .Input(step => step.UserId, data => data.UserId)
+                .Input(step => step.Question, _ => "Вопрос 2")
+                .Input(step => step.CorrectAnswer, _ => "!@#"));
     }
 }
