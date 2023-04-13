@@ -13,7 +13,7 @@ builder.Services.AddSingleton<TelegramBotService>();
 builder.Services.AddHostedService<TelegramBotService>(provider => provider.GetService<TelegramBotService>()!);
 
 builder.Services.AddStepFlow();
-builder.Services.AddTransient<Welcome>();
+builder.Services.AddTransient<TextMessage>();
 builder.Services.AddTransient<TextQuestion>();
 
 WebApplication app = builder.Build();

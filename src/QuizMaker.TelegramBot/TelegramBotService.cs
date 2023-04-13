@@ -56,24 +56,33 @@ public class TelegramBotService : IHostedService
 
     private async Task HandleUpdate(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
-        if (update.Message?.Text is null)
+        if (update.Message is null)
         {
             return;
         }
 
         string userId = update.Message.Chat.Id.ToString();
-        string messageText = update.Message.Text;
 
-        _logger.LogInformation($"HandleUpdate: '{userId}' : '{messageText}'");
-
-        switch (messageText)
+        string? messageText = update.Message.Text;
+        if (messageText is not null)
         {
-            case "/start":
-                await StartQuizWorkflowForUser(userId);
-                break;
-            default:
-                await PublishWorkflowEvent(userId, messageText);
-                break;
+            switch (messageText)
+            {
+                case "/start":
+                    await StartQuizWorkflowForUser(userId);
+                    break;
+                default:
+                    await PublishWorkflowEvent("UserMessage", userId, messageText);
+                    break;
+            }
+
+            _logger.LogInformation($"HandleTextUpdate: '{userId}' : '{messageText}'");
+        }
+
+        if (update.Message.Photo is not null)
+        {
+            await PublishWorkflowEvent("UserPhoto", userId, messageText);
+            _logger.LogInformation($"HandlePhotoUpdate: '{userId}'");
         }
     }
 
@@ -106,7 +115,7 @@ public class TelegramBotService : IHostedService
         _logger.LogInformation($"Quiz workflow '{workflowId}' started for user '{userId}'");
     }
 
-    private async Task PublishWorkflowEvent(string userId, string userText)
+    private async Task PublishWorkflowEvent(string eventName, string userId, string? userText = null)
     {
         using IServiceScope scope = _scopeFactory.CreateScope();
         IWorkflowHost workflowHost = scope.ServiceProvider.GetRequiredService<IWorkflowHost>();
@@ -118,7 +127,7 @@ public class TelegramBotService : IHostedService
             return;
         }
 
-        workflowHost.PublishEvent("UserMessage", userData.UserId, userText);
+        workflowHost.PublishEvent(eventName, userData.UserId, userText);
     }
 
     private readonly ILogger<TelegramBotService> _logger;

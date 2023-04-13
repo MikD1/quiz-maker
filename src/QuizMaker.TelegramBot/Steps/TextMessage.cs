@@ -2,19 +2,20 @@ using StepFlow.Contracts;
 
 namespace QuizMaker.TelegramBot.Steps;
 
-public class Welcome : IStep
+public class TextMessage : IStep
 {
-    public Welcome(TelegramBotService botService)
+    public TextMessage(TelegramBotService botService)
     {
         _botService = botService;
     }
 
     public string UserId { get; set; } = default!;
 
+    public string Message { get; set; } = default!;
+
     public async Task ExecuteAsync()
     {
-        string message = "Здравствуй, Игоренок! Твой квест начинается. . .";
-        await _botService.SendMessage(UserId, message);
+        await _botService.SendMessage(UserId, Message);
     }
 
     private readonly TelegramBotService _botService;

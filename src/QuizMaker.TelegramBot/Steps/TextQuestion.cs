@@ -28,12 +28,12 @@ public class TextQuestion : IStep
             string answer = await WaitAnswer();
             if (string.Equals(CorrectAnswer, answer, StringComparison.CurrentCultureIgnoreCase))
             {
-                await _botService.SendMessage(UserId, "Верно!");
+                await _botService.SendMessage(UserId, "Точно!");
                 hasCorrectAnswer = true;
             }
             else
             {
-                await _botService.SendMessage(UserId, "Что-то пошло не так... попробуй еще раз!");
+                await _botService.SendMessage(UserId, "Ну нет, попробуй еще раз");
                 ResetAnswer();
             }
         }
